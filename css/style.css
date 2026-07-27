@@ -1,0 +1,519 @@
+<!--
+파일 위치:
+/css/style.css
+-->
+/*
+=========================================
+파일 위치
+/css/style.css
+Project : Small Star
+Version : v0.3.0 (Complete Style Integration)
+=========================================
+*/
+
+/* ===========================
+   기본 설정
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:#0B162C;
+    color:#E2E8F0;
+    font-family:
+    "Pretendard",
+    "Malgun Gothic",
+    sans-serif;
+    line-height:1.6;
+    min-height:100vh;
+    overflow-x:hidden;
+    position: relative;
+}
+
+/* ===========================
+   공통 레이아웃
+=========================== */
+
+.container{
+    width:100%;
+    max-width:1200px;
+    margin:0 auto;
+    padding:0 20px;
+}
+
+/* 하위 페이지 공통 래퍼 */
+.sub-page {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    min-height: calc(100vh - 280px);
+}
+
+/* ===========================
+   링크
+=========================== */
+
+a{
+    color:inherit;
+    text-decoration:none;
+}
+
+/* ===========================
+   이미지
+=========================== */
+
+img{
+    display:block;
+    max-width:100%;
+}
+
+/* ===========================
+   제목
+=========================== */
+
+h1{
+    font-size:48px;
+    font-weight:700;
+    color:#F0F4F8;
+}
+
+h2{
+    font-size:34px;
+    margin-bottom:20px;
+    color:#E2E8F0;
+}
+
+h3{
+    font-size:24px;
+    color:#E2E8F0;
+}
+
+/* ===========================
+   문단
+=========================== */
+
+p{
+    font-size:18px;
+    color:#BAC7D5;
+}
+
+/* ===========================
+   버튼 (파스텔 유리 질감)
+=========================== */
+
+.button, .btn{
+    display:inline-block;
+    padding:10px 22px;
+    font-size:16px;
+    background:rgba(56, 113, 179, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color:#E2E8F0;
+    border-radius:50px;
+    font-weight:600;
+    transition:.3s;
+    box-shadow:0 6px 24px 0 rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(130, 210, 245, 0.25);
+    cursor: pointer;
+    text-align: center;
+}
+
+.button:hover, .btn:hover{
+    background:rgba(118, 215, 234, 0.25);
+    border-color:rgba(130, 210, 245, 0.7);
+    transform:translateY(-2px);
+    box-shadow:0 0 20px rgba(118, 215, 234, 0.3);
+    color:#FFFFFF;
+}
+
+.btn-primary {
+    background: rgba(85, 160, 230, 0.3);
+    border: 1px solid rgba(130, 210, 245, 0.35);
+}
+.btn-primary:hover {
+    background: rgba(118, 215, 234, 0.4);
+}
+
+.btn-secondary {
+    background: rgba(45, 80, 130, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.btn-secondary:hover {
+    background: rgba(60, 105, 170, 0.45);
+}
+
+.btn-ghost {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* ===========================
+   Header
+=========================== */
+
+.site-header{
+    position:sticky;
+    top:0;
+    left:0;
+    width:100%;
+    z-index:1000;
+    background:rgba(11, 22, 44, 0.85);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(255,255,255,0.06);
+}
+
+.header-inner{
+    max-width:1200px;
+    margin:0 auto;
+    padding:18px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    font-size:28px;
+    font-weight:700;
+    letter-spacing:1px;
+    color:#F0F4F8;
+    transition:.3s;
+}
+
+.logo:hover{
+    color:#76D7EA;
+}
+
+.logo span{
+    color:#76D7EA;
+}
+
+.nav{
+    display:flex;
+    gap:30px;
+    align-items: center;
+}
+
+.nav a{
+    position:relative;
+    font-size:17px;
+    color:#BAC7D5;
+    transition:.3s;
+}
+
+.nav a:hover{
+    color:#76D7EA;
+}
+
+.nav a::after{
+    content:"";
+    position:absolute;
+    left:0;
+    bottom:-6px;
+    width:0;
+    height:2px;
+    background:#76D7EA;
+    transition:.3s;
+}
+
+.nav a:hover::after{
+    width:100%;
+}
+
+/* ===========================
+   Hero
+=========================== */
+
+.hero{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    min-height:calc(100vh - 80px);
+    padding:120px 20px;
+}
+
+.hero-content{
+    max-width:760px;
+}
+
+.hero-kicker {
+    font-size: 16px;
+    font-weight: 600;
+    color: #76D7EA;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.hero h1, .hero-title{
+    margin-bottom:20px;
+    font-size:64px;
+    text-shadow:0 0 30px rgba(118,215,234,0.25);
+    color: #F0F4F8;
+}
+
+.hero p, .hero-description{
+    max-width:700px;
+    margin:0 auto 40px;
+    color:#A6B8CB;
+    font-size: 18px;
+}
+
+.hero-buttons, .hero-actions{
+    display:flex;
+    justify-content:center;
+    gap:16px;
+    flex-wrap:wrap;
+}
+
+/* ===========================
+   카드 및 그리드 시스템
+=========================== */
+
+.card-grid, .info-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:30px;
+    margin-top:60px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 20px;
+}
+
+.card, .info-card{
+    background:rgba(22, 40, 74, 0.45);
+    backdrop-filter: blur(10px);
+    border:1px solid rgba(255,255,255,0.06);
+    border-radius:18px;
+    padding:30px;
+    transition:.35s;
+}
+
+.card:hover, .info-card:hover{
+    transform:translateY(-8px);
+    border-color:rgba(118, 215, 234, 0.4);
+    box-shadow:0 15px 40px rgba(0,0,0,0.25);
+    background:rgba(28, 50, 90, 0.6);
+}
+
+.card h3, .info-card h2{
+    margin-bottom:15px;
+    font-size: 24px;
+    color: #F0F4F8;
+}
+
+.card p, .info-card p{
+    color:#A6B8CB;
+    font-size: 16px;
+}
+
+/* ===========================
+   업데이트 패널
+=========================== */
+
+.update-panel{
+    max-width: 1200px;
+    margin: 60px auto 0;
+    padding: 40px 20px;
+}
+
+.update-panel h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #F0F4F8;
+}
+
+.update-list{
+    background: rgba(22, 40, 74, 0.45);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 18px;
+    padding: 30px;
+    list-style-position: inside;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.update-list li {
+    color: #A6B8CB;
+    font-size: 17px;
+}
+
+/* ===========================
+   입력 및 폼 공통 스타일 (방명록, 게임 등 대응)
+=========================== */
+
+input, textarea {
+    width: 100%;
+    padding: 14px 18px;
+    background: rgba(22, 40, 74, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: #E2E8F0;
+    font-size: 16px;
+    font-family: inherit;
+    outline: none;
+    transition: 0.3s;
+}
+
+input:focus, textarea:focus {
+    border-color: #76D7EA;
+    box-shadow: 0 0 12px rgba(118, 215, 234, 0.2);
+}
+
+/* ===========================
+   Footer
+=========================== */
+
+footer{
+    text-align:center;
+    padding:40px 20px;
+    color:#7A92AB;
+    border-top:1px solid rgba(255,255,255,0.06);
+    margin-top: 80px;
+}
+
+/* ===========================
+   배경 시스템 (별, 입자, 반딧불이 구조 지원)
+=========================== */
+
+.page-background {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -2;
+    overflow: hidden;
+}
+
+.stars, .particles, .fireflies {
+    position: absolute;
+    inset: 0;
+}
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    opacity:.7;
+    z-index:-2;
+    background-image:
+    radial-gradient(circle at 8% 12%, rgba(255,255,255,.85) 1px, transparent 2px),
+    radial-gradient(circle at 17% 73%, rgba(180,220,255,.6) 1.5px, transparent 2.5px),
+    radial-gradient(circle at 31% 24%, rgba(118,215,234,.7) 1px, transparent 2px),
+    radial-gradient(circle at 43% 82%, rgba(255,255,255,.7) 2px, transparent 3px),
+    radial-gradient(circle at 58% 17%, rgba(200,230,255,.8) 1.2px, transparent 2.2px),
+    radial-gradient(circle at 66% 55%, rgba(118,215,234,.6) 1.5px, transparent 2.5px),
+    radial-gradient(circle at 79% 29%, rgba(255,255,255,.85) 2px, transparent 3px),
+    radial-gradient(circle at 92% 66%, rgba(180,220,255,.6) 1.5px, transparent 2.5px),
+    radial-gradient(circle at 14% 92%, rgba(255,255,255,.75) 1px, transparent 2px),
+    radial-gradient(circle at 27% 48%, rgba(200,230,255,.6) 1.8px, transparent 2.8px),
+    radial-gradient(circle at 39% 6%, rgba(118,215,234,.7) 1px, transparent 2px),
+    radial-gradient(circle at 54% 94%, rgba(255,255,255,.7) 1.5px, transparent 2.5px),
+    radial-gradient(circle at 73% 88%, rgba(255,255,255,.85) 1px, transparent 2px),
+    radial-gradient(circle at 88% 11%, rgba(118,215,234,.65) 2px, transparent 3px),
+    radial-gradient(circle at 97% 42%, rgba(180,220,255,.6) 1px, transparent 2px);
+    animation:starFloat 35s ease-in-out infinite alternate;
+}
+
+@keyframes starFloat{
+    0%{
+        transform:translateY(0) scale(1);
+        opacity:.65;
+    }
+    50%{
+        opacity:.9;
+    }
+    100%{
+        transform:translateY(-20px) scale(1.02);
+        opacity:.75;
+    }
+}
+
+body::after{
+    content:"";
+    position:fixed;
+    width:700px;
+    height:700px;
+    top:-200px;
+    right:-150px;
+    border-radius:50%;
+    background:radial-gradient(circle,
+    rgba(118,215,234,.12),
+    transparent 70%);
+    pointer-events:none;
+    z-index:-1;
+}
+
+/* ===========================
+   Section
+=========================== */
+
+section{
+    padding:80px 0;
+}
+
+/* ===========================
+   Noscript 메시지
+=========================== */
+.noscript-message {
+    text-align: center;
+    padding: 20px;
+    background: #16284A;
+    color: #E2E8F0;
+}
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media (max-width:768px){
+
+    .header-inner{
+        flex-direction:column;
+        gap:20px;
+    }
+
+    .nav{
+        gap:18px;
+        flex-wrap:wrap;
+        justify-content:center;
+    }
+
+    h1, .hero-title{
+        font-size:36px;
+    }
+
+    p, .hero-description{
+        font-size:16px;
+    }
+
+    .hero{
+        min-height:auto;
+        padding:80px 20px;
+    }
+
+    .hero-buttons, .hero-actions{
+        flex-direction:column;
+        align-items:center;
+    }
+
+    .hero-buttons .btn, .hero-actions .btn,
+    .hero-buttons .button, .hero-actions .button {
+        width: 100%;
+        max-width: 260px;
+    }
+}
