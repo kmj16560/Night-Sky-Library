@@ -85,7 +85,7 @@
     var brand = document.createElement("a");
     brand.className = "site-brand";
     brand.href = buildPath("index.html");
-    brand.textContent = "Mystic Blue";
+    brand.textContent = "Night Sky Library";
 
     var mobileToggle = document.createElement("button");
     mobileToggle.type = "button";

@@ -1,0 +1,85 @@
+<!--
+파일 위치:
+/pages/game.html
+-->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="밤하늘 서재 미니게임 공간" />
+  <title>미니게임 - 밤하늘 서재</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/header.js" defer></script>
+</head>
+<body>
+  <div class="page-background" aria-hidden="true">
+    <div class="stars"></div>
+    <div class="particles"></div>
+    <div class="fireflies"></div>
+  </div>
+
+  <div id="site-header"></div>
+
+  <main class="sub-page">
+    <!-- Hero 섹션 -->
+    <section class="hero" style="min-height: auto; padding: 60px 20px 40px;">
+      <div class="hero-content">
+        <p class="hero-kicker">Mini Games</p>
+        <h1 class="hero-title" style="margin-bottom: 2px;">미니게임</h1>
+        <p style="font-size: 20px; font-weight: 500; color: #A9D6E5; text-align: center; margin-bottom: 25px; letter-spacing: 2px; text-shadow: 0 0 12px rgba(169,214,229,0.4);">별빛 오락실</p>
+        <p class="hero-description">
+          밤하늘 서재에서 가볍게 즐길 수 있는 소소한 미니게임 공간입니다.
+        </p>
+      </div>
+    </section>
+
+    <!-- 게임 목록 섹션 -->
+    <section style="margin-top: 20px; background: rgba(22, 40, 74, 0.35); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; padding: 45px 25px;">
+      <h2 style="font-size: 32px; margin-bottom: 30px; color: #F0F4F8; text-align: center; text-shadow: 0 0 20px rgba(118,215,234,0.25);">플레이 가능한 게임</h2>
+      
+      <div class="card-grid" style="margin-top: 0; padding: 0;">
+        <article class="card" style="display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box;">
+          <div>
+            <h3>⭐ 별빛 맞추기</h3>
+            <p>짝을 찾는 재미가 있는 카드 뒤집기 기억력 게임입니다. 나만의 기록에 도전해보세요!</p>
+          </div>
+          <div style="margin-top: 20px; width: 100%;">
+            <a href="game-memory.html" class="btn btn-primary" style="display: block; width: 100%; text-align: center; box-sizing: border-box; padding: 10px 15px;">게임 시작</a>
+          </div>
+        </article>
+
+        <article class="card" style="display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box;">
+          <div>
+            <h3>🌠 유성 캐치 (예정)</h3>
+            <p>떨어지는 유성을 빠르게 잡아 고득점을 달성하는 반응속도 게임입니다.</p>
+          </div>
+          <div style="margin-top: 20px; width: 100%;">
+            <button class="btn btn-secondary" style="display: block; width: 100%; cursor: not-allowed; opacity: 0.6; box-sizing: border-box; padding: 10px 15px;">준비 중</button>
+          </div>
+        </article>
+
+        <article class="card" style="display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box;">
+          <div>
+            <h3>🪐 행성 탐사 퀴즈 (예정)</h3>
+            <p>우주와 밤하늘에 관한 재미있는 상식 퀴즈를 풀어보는 코너입니다.</p>
+          </div>
+          <div style="margin-top: 20px; width: 100%;">
+            <button class="btn btn-secondary" style="display: block; width: 100%; cursor: not-allowed; opacity: 0.6; box-sizing: border-box; padding: 10px 15px;">준비 중</button>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 밤하늘 서재. All rights reserved.</p>
+  </footer>
+
+  <noscript>
+    <div class="noscript-message">
+      이 홈페이지는 일부 기능에 JavaScript가 필요합니다.
+    </div>
+  </noscript>
+</body>
+</html>

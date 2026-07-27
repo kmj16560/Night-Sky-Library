@@ -1,0 +1,200 @@
+<!--
+파일 위치:
+/pages/game-memory.html
+-->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="밤하늘 서재 별빛 맞추기 기억력 게임" />
+  <title>별빛 맞추기 - 밤하늘 서재</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/header.js" defer></script>
+  <style>
+    .game-container {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .game-info {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 25px;
+      font-size: 18px;
+      color: #A9D6E5;
+      font-weight: 600;
+    }
+    .memory-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      perspective: 1000px;
+    }
+    .memory-card {
+      aspect-ratio: 1;
+      background: rgba(22, 40, 74, 0.7);
+      border: 1px solid rgba(130, 210, 245, 0.3);
+      border-radius: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      user-select: none;
+      transition: transform 0.2s, background 0.2s, border-color 0.2s;
+      transform-style: preserve-3d;
+    }
+    .memory-card.flipped {
+      background: rgba(45, 80, 130, 0.85);
+      border-color: #76D7EA;
+      box-shadow: 0 0 15px rgba(118,215,234,0.3);
+    }
+    .memory-card.matched {
+      background: rgba(28, 90, 110, 0.5);
+      border-color: rgba(118, 215, 234, 0.5);
+      opacity: 0.6;
+      cursor: default;
+    }
+    .game-message {
+      margin-top: 25px;
+      font-size: 20px;
+      font-weight: 600;
+      color: #F0F4F8;
+      min-height: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-background" aria-hidden="true">
+    <div class="stars"></div>
+    <div class="particles"></div>
+    <div class="fireflies"></div>
+  </div>
+
+  <div id="site-header"></div>
+
+  <main class="sub-page">
+    <section class="hero" style="min-height: auto; padding: 40px 20px 20px;">
+      <div class="hero-content">
+        <p class="hero-kicker">Mini Game</p>
+        <h1 class="hero-title" style="margin-bottom: 2px; font-size: 42px;">별빛 맞추기</h1>
+        <p style="font-size: 18px; font-weight: 500; color: #A9D6E5; text-align: center; margin-bottom: 15px; letter-spacing: 2px; text-shadow: 0 0 12px rgba(169,214,229,0.4);">카드 기억력 게임</p>
+        <p class="hero-description" style="margin-bottom: 20px;">
+          카드를 뒤집어 같은 별빛 기호를 모두 찾아보세요!
+        </p>
+      </div>
+    </section>
+
+    <section style="margin-top: 10px; background: rgba(22, 40, 74, 0.35); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; padding: 35px 25px;">
+      <div class="game-container">
+        <div class="game-info">
+          <span>시도 횟수: <strong id="attempts" style="color: #F0F4F8;">0</strong></span>
+          <span>남은 짝: <strong id="pairs-left" style="color: #76D7EA;">6</strong></span>
+        </div>
+
+        <div class="memory-grid" id="memoryGrid"></div>
+
+        <div class="game-message" id="gameMessage"></div>
+
+        <div style="margin-top: 25px;">
+          <button class="btn btn-primary" id="restartBtn" onclick="startGame()">다시 하기</button>
+          <a href="game.html" class="btn btn-secondary" style="margin-left: 10px;">목록으로</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 밤하늘 서재. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const symbols = ['⭐', '🌙', '🪐', '☄️', '🌌', '🚀'];
+    let cards = [];
+    let flippedCards = [];
+    let matchedPairs = 0;
+    let attempts = 0;
+    let isLocked = false;
+
+    const gridEl = document.getElementById('memoryGrid');
+    const attemptsEl = document.getElementById('attempts');
+    const pairsLeftEl = document.getElementById('pairs-left');
+    const messageEl = document.getElementById('gameMessage');
+
+    function startGame() {
+      gridEl.innerHTML = '';
+      flippedCards = [];
+      matchedPairs = 0;
+      attempts = 0;
+      isLocked = false;
+      attemptsEl.textContent = attempts;
+      pairsLeftEl.textContent = symbols.length;
+      messageEl.textContent = '';
+
+      let deck = [...symbols, ...symbols];
+      deck.sort(() => Math.random() - 0.5);
+
+      deck.forEach((symbol, index) => {
+        const card = document.createElement('div');
+        card.classList.add('memory-card');
+        card.dataset.symbol = symbol;
+        card.dataset.index = index;
+        card.addEventListener('click', flipCard);
+        gridEl.appendChild(card);
+      });
+    }
+
+    function flipCard() {
+      if (isLocked) return;
+      if (this.classList.contains('flipped') || this.classList.contains('matched')) return;
+
+      this.classList.add('flipped');
+      this.textContent = this.dataset.symbol;
+      flippedCards.push(this);
+
+      if (flippedCards.length === 2) {
+        attempts++;
+        attemptsEl.textContent = attempts;
+        checkMatch();
+      }
+    }
+
+    function checkMatch() {
+      const [card1, card2] = flippedCards;
+      const isMatch = card1.dataset.symbol === card2.dataset.symbol;
+
+      if (isMatch) {
+        card1.classList.add('matched');
+        card2.classList.add('matched');
+        matchedPairs++;
+        pairsLeftEl.textContent = symbols.length - matchedPairs;
+        flippedCards = [];
+
+        if (matchedPairs === symbols.length) {
+          messageEl.textContent = `🎉 축하합니다! ${attempts}번 만에 모든 별빛을 찾았어요!`;
+        }
+      } else {
+        isLocked = true;
+        // 틀렸을 때 빠르게 되돌아가도록 대기 시간을 350밀리초로 단축
+        setTimeout(() => {
+          card1.classList.remove('flipped');
+          card1.textContent = '';
+          card2.classList.remove('flipped');
+          card2.textContent = '';
+          flippedCards = [];
+          isLocked = false;
+        }, 350);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', startGame);
+  </script>
+
+  <noscript>
+    <div class="noscript-message">
+      이 홈페이지는 미니게임 플레이에 JavaScript가 필요합니다.
+    </div>
+  </noscript>
+</body>
+</html>
