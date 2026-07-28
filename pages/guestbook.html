@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="밤하늘 서재 별빛 방명록" />
+  <title>별빛 방명록 - 밤하늘 서재</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/header.js" defer></script>
+  <style>
+    .book-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #FDFBF7;
+      color: #2C3E50;
+      border-radius: 12px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), inset 0 0 40px rgba(0, 0, 0, 0.05);
+      border: 1px solid #E5DFD3;
+      padding: 40px 50px;
+      position: relative;
+    }
+    .book-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 2px;
+      background: rgba(0, 0, 0, 0.06);
+      transform: translateX(-50%);
+    }
+    .book-header {
+      text-align: center;
+      margin-bottom: 25px;
+      border-bottom: 2px dashed #E5DFD3;
+      padding-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .book-header h2 {
+      font-size: 32px;
+      color: #1A2E40;
+      margin: 0;
+    }
+    .book-header p {
+      font-size: 15px;
+      color: #617A91;
+      margin: 0;
+    }
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .write-trigger-btn {
+      background: #16284A;
+      color: #76D7EA;
+      border: 1px solid rgba(118,215,234,0.4);
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: all 0.2s;
+    }
+    .write-trigger-btn:hover {
+      background: #1e355e;
+      transform: translateY(-2px);
+    }
+    .admin-logout-btn {
+      background: #1A2E40;
+      color: #76D7EA;
+      border: 1px solid #76D7EA;
+      padding: 6px 12px;
+      border-radius: 15px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    
+    /* 방명록 목록 */
+    .guestbook-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-height: 500px;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+    .guestbook-item {
+      background: #FFFFFF;
+      border-left: 4px solid #76D7EA;
+      padding: 15px;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+      position: relative;
+    }
+    .guestbook-item .item-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: #7F8C8D;
+      margin-bottom: 6px;
+    }
+    .guestbook-item .item-author {
+      font-weight: bold;
+      color: #1A2E40;
+    }
+    .guestbook-item .item-content {
+      font-size: 15px;
+      color: #34495E;
+      word-break: break-all;
+      white-space: pre-wrap;
+    }
+    .delete-btn {
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    .delete-btn:hover {
+      background: #fa5252;
+    }
+    .no-entries {
+      text-align: center;
+      color: #7F8C8D;
+      padding: 40px 0;
+      font-style: italic;
+    }
+
+    /* 플로팅 연필 버튼 */
+    .floating-pencil {
+      position: fixed;
+      bottom: 35px;
+      right: 35px;
+      width: 60px;
+      height: 60px;
+      background: #16284A;
+      color: #76D7EA;
+      border: 2px solid #76D7EA;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.4), 0 0 15px rgba(118,215,234,0.3);
+      z-index: 100;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .floating-pencil:hover {
+      transform: scale(1.1);
+      background: #1e355e;
+    }
+
+    /* 작성 모달 팝업 */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 20, 40, 0.7);
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal-card {
+      background: #FDFBF7;
+      color: #2C3E50;
+      width: 90%;
+      max-width: 450px;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border: 1px solid #E5DFD3;
+      position: relative;
+      transform: translateY(20px);
+      transition: transform 0.3s;
+    }
+    .modal-overlay.active .modal-card {
+      transform: translateY(0);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 2px dashed #E5DFD3;
+      padding-bottom: 10px;
+    }
+    .modal-header h3 {
+      margin: 0;
+      color: #1A2E40;
+      font-size: 22px;
+    }
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      color: #7F8C8D;
+    }
+    .close-btn:hover {
+      color: #1A2E40;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: bold;
+      color: #2C3E50;
+      margin-bottom: 5px;
+    }
+    .form-input, .form-textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #D6CBC0;
+      border-radius: 6px;
+      background: #FFFFFF;
+      font-size: 15px;
+      color: #2C3E50;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+    .form-textarea {
+      resize: vertical;
+      height: 90px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-background" aria-hidden="true">
+    <div class="stars"></div>
+    <div class="particles"></div>
+    <div class="fireflies"></div>
+  </div>
+
+  <div id="site-header"></div>
+
+  <main class="sub-page">
+    <section class="hero" style="min-height: auto; padding: 40px 20px 20px;">
+      <div class="hero-content">
+        <p class="hero-kicker" style="cursor: pointer;" onclick="goToAdminLogin()" title="관리자 로그인">Guestbook</p>
+        <h1 class="hero-title" style="margin-bottom: 2px; font-size: 42px;">별빛 방명록</h1>
+        <p style="font-size: 18px; font-weight: 500; color: #A9D6E5; text-align: center; margin-bottom: 15px; letter-spacing: 2px; text-shadow: 0 0 12px rgba(169,214,229,0.4);">밤하늘에 남기는 따뜻한 흔적</p>
+        <p class="hero-description" style="margin-bottom: 20px;">
+          밤하늘 서재 책장에 방문하신 흔적을 남겨보세요.
+        </p>
+      </div>
+    </section>
+
+    <section style="margin-top: 10px; background: rgba(22, 40, 74, 0.35); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; padding: 45px 25px;">
+      <div class="book-container">
+        <div class="book-header">
+          <div>
+            <h2>📖 밤하늘 서재 방명록</h2>
+            <p>다녀간 이들의 별빛 같은 이야기들</p>
+          </div>
+          <div class="header-actions">
+            <button class="write-trigger-btn" onclick="openModal()">+ 별빛 남기기</button>
+            <div id="authActionArea"></div>
+          </div>
+        </div>
+
+        <div class="guestbook-list" id="guestbookList">
+          </div>
+
+        <div style="margin-top: 30px; text-align: center;">
+          <a href="others.html" class="btn btn-secondary" style="color: #1A2E40; border-color: #D6CBC0;">기타 목록으로</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="floating-pencil" onclick="openModal()" title="방명록 작성하기">
+    ✏️
+  </div>
+
+  <div class="modal-overlay" id="writeModal" onclick="handleModalClick(event)">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>✨ 별빛 남기기</h3>
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+      </div>
+      <form id="guestbookForm" onsubmit="addEntry(event)">
+        <div class="form-group">
+          <label for="author">닉네임</label>
+          <input type="text" id="author" class="form-input" placeholder="이름 또는 별칭을 입력하세요" required maxlength="15">
+        </div>
+        <div class="form-group">
+          <label for="message">메시지</label>
+          <textarea id="message" class="form-textarea" placeholder="따뜻한 한마디를 남겨주세요 (최대 150자)" required maxlength="150"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; background: #16284A; color: #F0F4F8; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px;">작성 완료</button>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 밤하늘 서재. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function checkAdminStatus() {
+      const isAdmin = sessionStorage.getItem('nightsky_admin') === 'true';
+      const authArea = document.getElementById('authActionArea');
+
+      if (isAdmin) {
+        authArea.innerHTML = `<button class="admin-logout-btn" onclick="logoutAdmin()">로그아웃</button>`;
+      } else {
+        authArea.innerHTML = '';
+      }
+    }
+
+    function logoutAdmin() {
+      sessionStorage.removeItem('nightsky_admin');
+      alert('관리자 로그아웃되었습니다.');
+      checkAdminStatus();
+      renderEntries();
+    }
+
+    function goToAdminLogin() {
+      location.href = 'admin-login.html';
+    }
+
+    function getEntries() {
+      const data = localStorage.getItem('nightsky_guestbook');
+      return data ? JSON.parse(data) : [
+        { author: '관리자 잔별', message: '밤하늘 서재에 오신 것을 환영합니다! 예쁜 추억을 많이 남겨주세요 ✨', date: '2026-04-01' }
+      ];
+    }
+
+    function saveEntries(entries) {
+      localStorage.setItem('nightsky_guestbook', JSON.stringify(entries));
+    }
+
+    function renderEntries() {
+      const listEl = document.getElementById('guestbookList');
+      const entries = getEntries();
+      const isAdmin = sessionStorage.getItem('nightsky_admin') === 'true';
+
+      if (entries.length === 0) {
+        listEl.innerHTML = '<div class="no-entries">아직 작성된 방명록이 없습니다. 우측 하단의 연필 버튼을 눌러 첫 페이지를 채워주세요!</div>';
+        return;
+      }
+
+      listEl.innerHTML = '';
+      entries.forEach((entry, index) => {
+        const item = document.createElement('div');
+        item.classList.add('guestbook-item');
+        
+        let deleteBtnHTML = '';
+        if (isAdmin) {
+          deleteBtnHTML = `<button class="delete-btn" onclick="deleteEntry(${index})">삭제</button>`;
+        }
+
+        item.innerHTML = `
+          <div class="item-info">
+            <span class="item-author">✍️ ${escapeHTML(entry.author)}</span>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span>${escapeHTML(entry.date)}</span>
+              ${deleteBtnHTML}
+            </div>
+          </div>
+          <div class="item-content">${escapeHTML(entry.message)}</div>
+        `;
+        listEl.appendChild(item);
+      });
+    }
+
+    function deleteEntry(index) {
+      if (confirm('정말 이 방명록 글을 삭제하시겠습니까?')) {
+        const entries = getEntries();
+        entries.splice(index, 1);
+        saveEntries(entries);
+        renderEntries();
+      }
+    }
+
+    function openModal() {
+      document.getElementById('writeModal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('writeModal').classList.remove('active');
+    }
+
+    function handleModalClick(e) {
+      if (e.target.id === 'writeModal') {
+        closeModal();
+      }
+    }
+
+    function addEntry(e) {
+      e.preventDefault();
+      const authorInput = document.getElementById('author');
+      const messageInput = document.getElementById('message');
+
+      const author = authorInput.value.trim();
+      const message = messageInput.value.trim();
+
+      if (!author || !message) return;
+
+      const today = new Date().toISOString().split('T')[0];
+      const newEntry = { author, message, date: today };
+
+      const entries = getEntries();
+      entries.unshift(newEntry);
+
+      saveEntries(entries);
+      renderEntries();
+
+      authorInput.value = '';
+      messageInput.value = '';
+      closeModal();
+    }
+
+    function escapeHTML(str) {
+      return str.replace(/[&<>'"]/g, 
+        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+      );
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      checkAdminStatus();
+      renderEntries();
+    });
+  </script>
+
+  <noscript>
+    <div class="noscript-message">
+      이 홈페이지는 방명록 기능에 JavaScript가 필요합니다.
+    </div>
+  </noscript>
+</body>
+</html>

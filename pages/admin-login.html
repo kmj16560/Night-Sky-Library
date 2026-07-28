@@ -1,0 +1,141 @@
+<!--
+파일 위치:
+/pages/admin-login.html
+-->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="밤하늘 서재 관리자 로그인" />
+  <title>관리자 로그인 - 밤하늘 서재</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/header.js" defer></script>
+  <style>
+    .login-container {
+      max-width: 400px;
+      margin: 40px auto;
+      background: rgba(22, 40, 74, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 40px 30px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+    }
+    .login-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .login-header h2 {
+      color: #F0F4F8;
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+    .login-header p {
+      color: #A9D6E5;
+      font-size: 14px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      color: #F0F4F8;
+      font-size: 14px;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    .form-input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: rgba(10, 20, 40, 0.6);
+      color: #F0F4F8;
+      font-size: 16px;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus {
+      border-color: #76D7EA;
+    }
+    .error-msg {
+      color: #ff6b6b;
+      font-size: 13px;
+      text-align: center;
+      margin-top: 15px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-background" aria-hidden="true">
+    <div class="stars"></div>
+    <div class="particles"></div>
+    <div class="fireflies"></div>
+  </div>
+
+  <div id="site-header"></div>
+
+  <main class="sub-page">
+    <section class="hero" style="min-height: auto; padding: 40px 20px 20px;">
+      <div class="hero-content">
+        <p class="hero-kicker">Admin</p>
+        <h1 class="hero-title" style="margin-bottom: 2px; font-size: 38px;">관리자 전용</h1>
+      </div>
+    </section>
+
+    <section style="margin-top: 10px;">
+      <div class="login-container">
+        <div class="login-header">
+          <h2>🔒 서재 지기 인증</h2>
+          <p>방명록 관리를 위해 비밀번호를 입력해주세요.</p>
+        </div>
+
+        <form onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label for="adminPassword">관리자 비밀번호</label>
+            <input type="password" id="adminPassword" class="form-input" placeholder="비밀번호를 입력하세요" required>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 10px; font-weight: bold;">로그인</button>
+          <div class="error-msg" id="errorMsg">비밀번호가 올바르지 않습니다.</div>
+        </form>
+
+        <div style="margin-top: 25px; text-align: center;">
+          <a href="guestbook.html" class="btn btn-secondary" style="font-size: 14px; padding: 8px 15px;">방명록으로 돌아가기</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 밤하늘 서재. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function handleLogin(e) {
+      e.preventDefault();
+      const pwInput = document.getElementById('adminPassword');
+      const errorMsg = document.getElementById('errorMsg');
+
+      // 관리자 비밀번호: '민지'
+      if (pwInput.value === '민지') {
+        sessionStorage.setItem('nightsky_admin', 'true');
+        alert('관리자 로그인에 성공하였습니다.');
+        location.href = 'guestbook.html';
+      } else {
+        errorMsg.style.display = 'block';
+        pwInput.value = '';
+        pwInput.focus();
+      }
+    }
+  </script>
+
+  <noscript>
+    <div class="noscript-message">
+      이 페이지는 JavaScript가 필요합니다.
+    </div>
+  </noscript>
+</body>
+</html>

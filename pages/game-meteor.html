@@ -1,0 +1,239 @@
+<!--
+파일 위치:
+/pages/game-meteor.html
+-->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="밤하늘 서재 유성 캐치 아케이드 게임" />
+  <title>유성 캐치 - 밤하늘 서재</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/header.js" defer></script>
+  <style>
+    .game-container {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .game-info {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+      font-size: 18px;
+      color: #A9D6E5;
+      font-weight: 600;
+    }
+    .game-board {
+      position: relative;
+      width: 100%;
+      height: 420px;
+      background: rgba(10, 20, 40, 0.7);
+      border: 1px solid rgba(130, 210, 245, 0.3);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: crosshair;
+    }
+    .meteor-target {
+      position: absolute;
+      font-size: 38px;
+      user-select: none;
+      cursor: pointer;
+      animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s;
+    }
+    .meteor-target:active {
+      transform: translate(-50%, -50%) scale(1.3);
+    }
+    @keyframes popIn {
+      0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+      }
+    }
+    .game-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 20, 40, 0.85);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-background" aria-hidden="true">
+    <div class="stars"></div>
+    <div class="particles"></div>
+    <div class="fireflies"></div>
+  </div>
+
+  <div id="site-header"></div>
+
+  <main class="sub-page">
+    <section class="hero" style="min-height: auto; padding: 40px 20px 20px;">
+      <div class="hero-content">
+        <p class="hero-kicker">Mini Game</p>
+        <h1 class="hero-title" style="margin-bottom: 2px; font-size: 42px;">유성 캐치</h1>
+        <p style="font-size: 18px; font-weight: 500; color: #A9D6E5; text-align: center; margin-bottom: 15px; letter-spacing: 2px; text-shadow: 0 0 12px rgba(169,214,229,0.4);">순발력 캐치 게임</p>
+        <p class="hero-description" style="margin-bottom: 20px;">
+          하늘에 갑자기 나타나는 유성과 별빛을 제한 시간 내에 최대한 많이 클릭해 잡으세요!
+        </p>
+      </div>
+    </section>
+
+    <section style="margin-top: 10px; background: rgba(22, 40, 74, 0.35); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; padding: 35px 25px;">
+      <div class="game-container">
+        <div class="game-info">
+          <span>잡은 갯수: <strong id="score" style="color: #F0F4F8;">0</strong>개</span>
+          <span>남은 시간: <strong id="timer" style="color: #76D7EA;">30</strong>초</span>
+        </div>
+
+        <div class="game-board" id="gameBoard">
+          <div class="game-overlay" id="startOverlay">
+            <h2 style="color: #F0F4F8; margin-bottom: 15px; font-size: 28px;">유성 캐치</h2>
+            <p style="color: #A9D6E5; margin-bottom: 25px;">밤하늘 곳곳에 불쑥 나타나는 별과 유성을 빠르게 터치하세요!</p>
+            <button class="btn btn-primary" onclick="startGame()">게임 시작</button>
+          </div>
+        </div>
+
+        <div style="margin-top: 25px;">
+          <a href="game.html" class="btn btn-secondary">목록으로</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 잔별. All rights reserved.</p>
+  </footer>
+
+  <script>
+    let score = 0;
+    let timeLeft = 30;
+    let gameInterval = null;
+    let spawnTimer = null;
+    let isPlaying = false;
+
+    const boardEl = document.getElementById('gameBoard');
+    const scoreEl = document.getElementById('score');
+    const timerEl = document.getElementById('timer');
+    const startOverlay = document.getElementById('startOverlay');
+
+    const symbols = ['⭐', '☄️', '✨', '🌟', '💫'];
+
+    function startGame() {
+      // 초기화
+      score = 0;
+      timeLeft = 30;
+      scoreEl.textContent = score;
+      timerEl.textContent = timeLeft;
+      startOverlay.style.display = 'none';
+      isPlaying = true;
+
+      // 기존 유성 제거
+      document.querySelectorAll('.meteor-target').forEach(el => el.remove());
+
+      // 타이머 시작
+      gameInterval = setInterval(() => {
+        timeLeft--;
+        timerEl.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          endGame();
+        }
+      }, 1000);
+
+      // 유성 출현 루프 시작
+      scheduleNextSpawn();
+    }
+
+    function scheduleNextSpawn() {
+      if (!isPlaying) return;
+
+      spawnMeteor();
+
+      // 난이도에 따라 출현 간격 조절 (0.6초 ~ 1.1초 사이 랜덤)
+      const nextTime = Math.random() * 500 + 600;
+      spawnTimer = setTimeout(scheduleNextSpawn, nextTime);
+    }
+
+    function spawnMeteor() {
+      if (!isPlaying) return;
+
+      const meteor = document.createElement('div');
+      meteor.classList.add('meteor-target');
+      meteor.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+
+      // 보드 안에서 여유 공간을 두고 랜덤 좌표 생성 (패딩 40px)
+      const padding = 50;
+      const maxWidth = boardEl.clientWidth - padding * 2;
+      const maxHeight = boardEl.clientHeight - padding * 2;
+
+      const randomX = Math.floor(Math.random() * maxWidth) + padding;
+      const randomY = Math.floor(Math.random() * maxHeight) + padding;
+
+      meteor.style.left = randomX + 'px';
+      meteor.style.top = randomY + 'px';
+
+      // 클릭 시 점수 획득 및 즉시 삭제
+      meteor.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!isPlaying) return;
+        score++;
+        scoreEl.textContent = score;
+
+        // 터지는 효과
+        meteor.style.transform = 'translate(-50%, -50%) scale(1.6)';
+        meteor.style.opacity = '0';
+        setTimeout(() => meteor.remove(), 150);
+      });
+
+      boardEl.appendChild(meteor);
+
+      // 클릭하지 않으면 1.1초 ~ 1.6초 뒤에 자동으로 사라짐
+      const disappearTime = Math.random() * 500 + 1100;
+      setTimeout(() => {
+        if (meteor.parentElement) {
+          meteor.style.opacity = '0';
+          setTimeout(() => meteor.remove(), 200);
+        }
+      }, disappearTime);
+    }
+
+    function endGame() {
+      isPlaying = false;
+      clearInterval(gameInterval);
+      clearTimeout(spawnTimer);
+
+      // 남은 유성 제거
+      document.querySelectorAll('.meteor-target').forEach(el => el.remove());
+
+      // 결과 오버레이 표시
+      startOverlay.style.display = 'flex';
+      startOverlay.innerHTML = `
+        <h2 style="color: #F0F4F8; margin-bottom: 10px; font-size: 28px;">게임 종료!</h2>
+        <p style="color: #76D7EA; font-size: 22px; font-weight: bold; margin-bottom: 20px;">총 잡은 유성: ${score}개</p>
+        <button class="btn btn-primary" onclick="startGame()">다시 하기</button>
+      `;
+    }
+  </script>
+
+  <noscript>
+    <div class="noscript-message">
+      이 홈페이지는 미니게임 플레이에 JavaScript가 필요합니다.
+    </div>
+  </noscript>
+</body>
+</html>

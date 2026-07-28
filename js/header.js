@@ -99,21 +99,19 @@
     nav.setAttribute("aria-label", "주요 메뉴");
 
     var introMenu = createDropdown("소개", [
-      { text: "나", href: "pages/intro-me.html" },
-      { text: "홈페이지 소개", href: "pages/intro-home.html" },
-      { text: "업데이트", href: "pages/intro-update.html" }
+      { text: "소개", page: "intro-home.html" }
     ]);
 
     var gameMenu = createDropdown("게임", [
-      { text: "기억력게임", href: "pages/game-memory.html" },
-      { text: "보석맞추기", href: "pages/game-jewel.html" },
-      { text: "숫자게임", href: "pages/game-number.html" },
-      { text: "미로게임", href: "pages/game-maze.html" }
+      { text: "메인 화면", href: "pages/game.html" },
+      { text: "기억력 게임", href: "pages/game-memory.html" },
+      { text: "별빛 맞추기", href: "pages/game-jewel.html" }
     ]);
 
     var etcMenu = createDropdown("기타", [
+      { text: "기타", href: "pages/others.htmll" },
       { text: "방명록", href: "pages/etc-guestbook.html" },
-      { text: "링크모음", href: "pages/etc-links.html" }
+      { text: "링크 모음", href: "pages/etc-links.html" }
     ]);
 
     nav.appendChild(introMenu);
